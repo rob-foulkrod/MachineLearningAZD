@@ -2,5 +2,6 @@
 
 name: machine-learning-bicep
 hooks:
-  postdeploy: 
-    run: ./hooks/network.ps1
+  postprovision: 
+    run: ./hooks/postprovision.ps1
+    interactive: true
