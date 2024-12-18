@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: machine-learning-bicep
+hooks:
+  postdeploy: 
+    run: ./hooks/network.ps1
