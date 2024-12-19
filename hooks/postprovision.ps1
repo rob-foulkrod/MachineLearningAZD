@@ -9,7 +9,7 @@ write-host ""
 
 # Check if the 'az ml' extension is installed
 # the script will fail after many minutes if the extension is not installed
-. ./CheckExtensions.ps1 -extensionName "ml"
+. ./hooks/CheckExtensions.ps1 -extensionName "ml"
 
 Write-Host "Provisioning Network for Workspace"
 write-host "Command to execute..."
