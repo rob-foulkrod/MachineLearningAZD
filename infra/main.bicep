@@ -177,7 +177,7 @@ module virtualNetworkGateway 'br/public:avm/res/network/virtual-network-gateway:
   scope: rg
   params: {
     clusterSettings: {
-      clusterMode: 'activeActiveNoBgp'
+      clusterMode: 'activePassiveNoBgp'
     }
     gatewayType: 'Vpn'
     name: '${abbrs.networkVpnGateways}${resourceToken}'
@@ -187,13 +187,10 @@ module virtualNetworkGateway 'br/public:avm/res/network/virtual-network-gateway:
     disableIPSecReplayProtection: true
     enableBgpRouteTranslationForNat: true
     enablePrivateIpAddress: true
-
     location: location
-    publicIpZones: [
-      1
-    ]
-    skuName: 'VpnGw2AZ'
-    vpnGatewayGeneration: 'Generation2'
+    publicIpZones: []
+    skuName: 'VpnGw1'
+    vpnGatewayGeneration: 'Generation1'
     vpnType: 'RouteBased'
   }
 }
