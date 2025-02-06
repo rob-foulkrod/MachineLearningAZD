@@ -1,0 +1,2 @@
+- az cli (installed with AZD)
+- powershell version 7+ (pwsh)
