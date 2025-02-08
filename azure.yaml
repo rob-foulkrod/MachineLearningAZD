@@ -1,6 +1,10 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-name: machine-learning-bicep
+name: tdd-machine-learning-bicep
+metadata:
+  template: tdd-machine-learning-bicep@0.0.1-beta
+infra:
+   provider: "bicep"# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 hooks:
   postprovision: 
     run: ./hooks/postprovision.ps1
