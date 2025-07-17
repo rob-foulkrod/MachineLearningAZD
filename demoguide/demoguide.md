@@ -108,7 +108,9 @@ The ML workspace URL can be found in the Azure portal or by running:
 azd env get-value WORKSPACE_ID
 ```
 
-### 2. What can I demo from this scenario after deployment
+### 2. Baseline Environment for ML Demos
+
+This template provides a production-ready baseline environment for building and demonstrating machine learning scenarios. The following sections outline the key components and capabilities that are available as a foundation for your custom ML demos and experiments.
 
 #### 2.1 Azure Machine Learning Studio Access
 1. **Navigate to ML Studio**:
@@ -177,18 +179,14 @@ azd env get-value WORKSPACE_ID
    ```bash
    azd down
    ```
+   
+2. **Complete Resource Removal**:
+   ```bash
+   azd down --force --purge
+   ```
+   - Use `--force --purge` to completely remove everything including resource groups
    - Explain the importance of cleaning up expensive resources like VPN Gateways
    - Show cost implications of leaving resources running
-
-### Key Learning Outcomes
-
-After this demo, participants will understand:
-
-1. **Enterprise ML Architecture**: How to set up production-ready ML environments
-2. **Security Best Practices**: Implementing zero-trust networking and identity-based access
-3. **Cost Management**: Understanding the cost implications of enterprise ML infrastructure
-4. **DevOps Integration**: How AZD templates enable repeatable, infrastructure-as-code deployments
-5. **Compliance**: Meeting enterprise security and compliance requirements for ML workloads
 
 ### Additional Resources
 
