@@ -112,18 +112,24 @@ azd env get-value WORKSPACE_ID
 
 This template provides a production-ready baseline environment for building and demonstrating machine learning scenarios. The following sections outline the key components and capabilities that are available as a foundation for your custom ML demos and experiments.
 
-#### 2.1 Azure Machine Learning Studio Access
-1. **Navigate to ML Studio**:
-   - Use the Azure portal to find your ML workspace
-   - Click "Launch Studio" to access Azure ML Studio
-   - Demonstrate the integrated development environment
+#### 2.1 Resource Teardown and Cleanup
+1. **Standard Cleanup**:
+   ```bash
+   azd down
+   ```
+   
+2. **Complete Resource Removal**:
+   ```bash
+   azd down --force --purge
+   ```
+   - Use `--force --purge` to completely remove everything including resource groups
+   - Important for cleaning up expensive resources like VPN Gateways
+   - Prevents unexpected costs from resources left running
 
-2. **Explore the Compute Instance**:
-   - Show the pre-configured compute instance in the Compute section
-   - Demonstrate how it's configured with managed identity authentication
-   - Show the integrated Jupyter/VS Code environments
+#### 2.2 Azure Machine Learning Studio Access
+This template provides a production-ready ML workspace that instructors can use as a foundation for demonstrations.
 
-#### 2.2 Secure Storage Integration
+#### 2.3 Secure Storage Integration
 1. **Storage Access Demo**:
    - Navigate to the Datastores section in ML Studio
    - Show how the workspace automatically connects to storage using managed identity
@@ -134,7 +140,7 @@ This template provides a production-ready baseline environment for building and 
    - Demonstrate pulling/pushing ML model containers
    - Explain the security benefits of private registry access
 
-#### 2.3 Networking and Security Features
+#### 2.4 Networking and Security Features
 1. **VPN Connectivity**:
    - Explain the VPN Gateway configuration for secure site-to-site connectivity
    - Show the virtual network configuration with proper subnetting
@@ -145,7 +151,7 @@ This template provides a production-ready baseline environment for building and 
    - Explain how managed identities eliminate the need for stored credentials
    - Demonstrate the principle of least privilege implementation
 
-#### 2.4 Development Workflow Demo
+#### 2.5 Development Workflow Demo
 1. **Create a Simple ML Experiment**:
    - Use the compute instance to create a new notebook
    - Demonstrate data loading from the configured storage account
@@ -157,7 +163,7 @@ This template provides a production-ready baseline environment for building and 
    - Demonstrate model versioning and tracking
    - Explain the integration with the container registry for model deployment
 
-#### 2.5 Monitoring and Logging
+#### 2.6 Monitoring and Logging
 1. **Application Insights Integration**:
    - Navigate to the Application Insights resource
    - Show telemetry data from ML workspace operations
@@ -168,25 +174,11 @@ This template provides a production-ready baseline environment for building and 
    - Demonstrate cost tracking and optimization opportunities
    - Show security and compliance monitoring
 
-#### 2.6 Extension Capabilities
+#### 2.7 Extension Capabilities
 1. **Additional Storage Integration**:
    - Explain how the `AddStorage.ps1` hook can be used post-deployment
    - Demonstrate connecting additional storage accounts
    - Show proper permission assignment for extended storage access
-
-#### 2.7 Cleanup
-1. **Resource Cleanup**:
-   ```bash
-   azd down
-   ```
-   
-2. **Complete Resource Removal**:
-   ```bash
-   azd down --force --purge
-   ```
-   - Use `--force --purge` to completely remove everything including resource groups
-   - Explain the importance of cleaning up expensive resources like VPN Gateways
-   - Show cost implications of leaving resources running
 
 ### Additional Resources
 
