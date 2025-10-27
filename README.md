@@ -1,109 +1,121 @@
-TODO: rewrite for the AZD environment
+# Azure Machine Learning AZD Template
+
+This repository contains an Azure Developer CLI (AZD) template for deploying a comprehensive Azure Machine Learning environment with enterprise security features.
+
+## What Gets Deployed
+
+This template deploys a production-ready Azure Machine Learning workspace with:
+
+- **Azure Machine Learning Workspace** with system-assigned managed identity
+- **Compute Instance** for development work
+- **Virtual Network** with secure networking configuration
+- **VPN Gateway** for site-to-site connectivity
+- **Azure Storage Account** with proper RBAC permissions
+- **Azure Container Registry** (Premium) for ML model containers
+- **Azure Key Vault** for secrets management
+- **Application Insights** for monitoring and telemetry
+- **Log Analytics Workspace** for centralized logging
 
 ## Prerequisites
 
-Ensure you have the Azure CLI installed. You can download and install it from the following link:
-[Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli)
+Before you begin, ensure you have:
 
-## Running the Script Locally
+- An active Azure subscription with appropriate permissions
+- [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd) installed
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) installed
+- Git for cloning the repository
 
-It is recommended to run the installer locally instead of using CloudShell due to potential timeouts.
+## Quick Start
 
-### Step 1: Login to Azure
+### 1. Clone and Deploy
 
-Login to Azure using the following command and provide your credentials:
-```powershell
-az login
+```bash
+git clone https://github.com/rob-foulkrod/MachineLearningAZD.git
+cd MachineLearningAZD
+azd up
 ```
 
-### Step 2: Clone the Repository
+### 2. Follow the Prompts
 
-Clone the repository and navigate to the `MachineLearningBicep` directory:
-```powershell
-git clone https://github.com/rob-foulkrod/MachineLearningBicep.git
-cd MachineLearningBicep
+- **Environment Name**: Choose a unique name (this becomes your resource group name)
+- **Subscription**: Select your Azure subscription  
+- **Location**: Choose your preferred Azure region
+
+### 3. Wait for Deployment
+
+The deployment takes approximately 30-45 minutes due to VPN Gateway provisioning.
+
+## Configuration Options
+
+The template accepts the following optional parameters during deployment:
+
+- **Environment Name**: Used for resource group and resource naming
+- **Location**: Azure region for deployment (default: `eastus2`)
+- **VNet Name**: Custom virtual network name (optional)
+- **Storage Account Name**: Custom storage account name (optional)
+
+## Post-Deployment
+
+After deployment completes:
+
+1. **Access ML Studio**: Navigate to your ML workspace in the Azure portal and click "Launch Studio"
+2. **Use Compute Instance**: The pre-configured compute instance is ready for development
+3. **Explore Security**: All resources are configured with managed identities and RBAC
+
+## Demo Guide
+
+For detailed demonstration scenarios and step-by-step instructions, see the [Demo Guide](./demoguide/demoguide.md).
+
+## Clean Up
+
+To remove all deployed resources:
+
+```bash
+azd down
 ```
 
-### Step 3: Run the Script
+**Important**: The VPN Gateway is an expensive resource. Make sure to clean up when not needed.
 
-Execute the PowerShell script:
-```powershell
-./run.ps1
+## Advanced Configuration
+
+### Additional Storage Integration
+
+The `hooks/AddStorage.ps1` script can be used after deployment to integrate additional storage accounts that contain samples or demo material. This script assigns the appropriate permissions to connect external storage accounts to your Azure Machine Learning workspace.
+
+#### Usage
+
+Get your deployed resource information:
+```bash
+# Get the resource group name
+azd env get-value RG_NAME
+
+# Get the workspace name  
+azd env get-value WORKSPACE_NAME
+
+# Get the compute instance name
+azd env get-value WORKSPACE_INSTANCE_NAME
 ```
 
-## Additional Configuration
-
-- **resourceGroupName**: The name of the resource group. Default is `aml-rg`.
-- **location**: The Azure region where the resources will be deployed. Default is `eastus2`.
-- **prefix**: The prefix for naming resources. Default is `aml`.
-
-### Example Usage with Parameters
-
-To run the script with custom parameters, use the following command:
-
+Run the storage integration script:
 ```powershell
-./run.ps1 -resourceGroupName "myResourceGroup" -location "eastus" -prefix "myPrefix"
+./hooks/AddStorage.ps1
 ```
 
-Alternatively, you can use the shorthand version:
+The script will:
+- Prompt you to select additional storage accounts to integrate
+- Configure proper RBAC permissions for the ML workspace
+- Set up access for the compute instance managed identity
+- Grant appropriate permissions to your user account
 
-```powershell
-./run.ps1 -r "myResourceGroup" -l "eastus" -p "myPrefix"
-```
+This enables seamless access to external datasets and resources from within your ML workspace environment.
 
-## Extras
-## AddStorage.ps1
+## Architecture
 
-This script is an extension for users who may have additional storage accounts that contain samples or demo material. It assigns the appropriate permissions to the selected storage account for Azure Machine Learning (ML) workspaces and compute instances.
+This template uses [Azure Verified Modules (AVM)](https://azure.github.io/Azure-Verified-Modules/) to ensure best practices and enterprise readiness. The infrastructure includes:
 
-### Parameters
+- **Network Security**: Private networking with VPN gateway for secure connectivity
+- **Identity Management**: Managed identities with RBAC instead of access keys
+- **Monitoring**: Comprehensive logging and telemetry collection
+- **Compliance**: Enterprise security configurations and private endpoints
 
-All parameters are optional
-
-- `storageRGName` (string): The name of the resource group containing the storage account.
-- `storageAccountName` (string): The name of the storage account.
-- `workspaceRGName` (string): The name of the resource group containing the Azure ML workspace.
-- `workspaceName` (string): The name of the Azure ML workspace.
-- `computeInstanceName` (string): The name of the compute instance within the Azure ML workspace.
-- `userId` (string): The user ID of the current user. If not provided, the script will retrieve the current user's principal ID.
-
-### Functionality
-
-1. Retrieves the subscription ID of the current Azure account.
-2. If `userId` is not provided, retrieves the current user's principal ID.
-3. If `storageAccountName` is not provided, lists all storage accounts in the subscription and prompts the user to select one.
-4. If `workspaceName` is not provided, lists all Azure ML workspaces in the subscription and prompts the user to select one.
-5. If `computeInstanceName` is not provided, lists all compute instances in the selected workspace and prompts the user to select one.
-6. Retrieves the identities of the selected Azure ML workspace and compute instance.
-7. Assigns the following roles to the workspace identity on the selected storage account:
-    - Storage Account Contributor
-    - Storage Blob Data Contributor
-    - Storage File Data Privileged Contributor
-8. Assigns the following roles to the compute instance identity on the selected storage account:
-    - Storage Blob Data Contributor
-    - Storage File Data Privileged Contributor
-9. Assigns the following roles to the current user identity on the selected storage account:
-    - Storage Blob Data Contributor
-    - Storage File Data Privileged Contributor
-
-### Usage
-
-Run the script with the required parameters. If any parameters are not provided, the script will prompt the user to select from available options.
-
-#### Example Usage without Parameters
-
-To run the `AddStorage.ps1` script without any parameters, use the following command:
-
-```powershell
-./AddStorage.ps1
-```
-
-The script will prompt you to select from available options for any parameters that are not provided.
-
-#### Example Usage with All Parameters
-
-To run the `AddStorage.ps1` script with all parameters, use the following command:
-
-```powershell
-./AddStorage.ps1 -storageRGName "storageResourceGroup" -storageAccountName "mystorageaccount" -workspaceRGName "workspaceResourceGroup" -workspaceName "myWorkspace" -computeInstanceName "myComputeInstance" -userId "00000000-0000-0000-0000-000000000000"
-```
+For detailed architecture information, see the [Demo Guide](./demoguide/demoguide.md).
